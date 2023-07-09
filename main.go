@@ -62,7 +62,7 @@ func addToHistory(word string) {
 		return
 	}
 	for countFailAttempt != 0 {
-		index := isCorrect(word, countFailAttempt)
+		index := checkAllLetters(word, countFailAttempt)
 
 		isSuccessAttempt := index != -1
 		if isSuccessAttempt {
@@ -78,26 +78,31 @@ func addLastWordToHistoryString(startPosition int, newWord string) {
 	history = history[0:startPosition] + Red + "|" + Reset + newWord
 }
 
-func isCorrect(word string, orderMatch int) int {
-	firstMatchedLetter := findMatchBy(orderMatch, history, word)
+func checkAllLetters(wordFromInput string, orderMatch int) int {
+	firstMatchedLetter := findMatchBy(orderMatch, history, wordFromInput)
 
 	for i := firstMatchedLetter + 1; i <= len(history)-1; i++ {
-		if history[i] != word[i-firstMatchedLetter] {
+		if history[i] != wordFromInput[i-firstMatchedLetter] {
 			return -1
 		}
 	}
 	return firstMatchedLetter
 }
 
-func findMatchBy(counterMatch int, firstWord string, secondWord string) int {
-	index := len(firstWord) - 1
+func findMatchBy(numberOfAttempts int, history string, wordFromInput string) int {
+	totalNumberOfLetterInHistory := len(history) - 1
+	index := totalNumberOfLetterInHistory
 
 	for index >= 0 {
-		if firstWord[index] == secondWord[0] {
-			counterMatch--
-			if counterMatch == 0 {
+		if history[index] == '|' {
+			return -1
+		}
+		if history[index] == wordFromInput[0] {
+			numberOfAttempts--
+			if numberOfAttempts == 0 {
 				return index
 			}
+
 		}
 		index--
 	}
